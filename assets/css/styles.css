@@ -472,6 +472,7 @@ footer {
         height: auto;
         padding-top: 140px;
         scroll-snap-align: start;
+        max-width: 100%;
     }
 
     .card,
