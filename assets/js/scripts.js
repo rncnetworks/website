@@ -82,3 +82,48 @@ window.addEventListener('resize', () => {
     }
   });
 });
+
+/* Active nav link via card visibility (desktop only) */
+(function() {
+  const nav = document.querySelector('.nav-menu');
+  if (!nav) return;
+  const links = nav.querySelectorAll('a');
+  const cards = document.querySelectorAll('.card');
+  let observer = null;
+  const visibility = new Map();
+  cards.forEach(c => visibility.set(c, 0));
+
+  function getActiveCardId() {
+    let best = null, bestRatio = 0;
+    visibility.forEach((ratio, card) => {
+      if (ratio > bestRatio) { bestRatio = ratio; best = card; }
+    });
+    return best ? best.id : null;
+  }
+
+  function updateActiveLink() {
+    if (window.innerWidth <= 768) return;
+    if (nav.classList.contains('hovering')) return;
+    const activeId = getActiveCardId();
+    links.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + activeId));
+  }
+
+  function setupObserver() {
+    if (observer) observer.disconnect();
+    visibility.forEach((_, card) => visibility.set(card, 0));
+    if (window.innerWidth > 768) {
+      observer = new IntersectionObserver(entries => {
+        entries.forEach(e => visibility.set(e.target, e.intersectionRatio));
+        if (!nav.classList.contains('hovering')) updateActiveLink();
+      }, { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] });
+      cards.forEach(c => observer.observe(c));
+    } else {
+      links.forEach(l => l.classList.remove('active'));
+    }
+  }
+
+  nav.addEventListener('mouseenter', () => { if (window.innerWidth > 768) nav.classList.add('hovering'); });
+  nav.addEventListener('mouseleave', () => { nav.classList.remove('hovering'); updateActiveLink(); });
+  window.addEventListener('resize', setupObserver);
+  setupObserver();
+})();

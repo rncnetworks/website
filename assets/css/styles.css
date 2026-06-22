@@ -97,6 +97,10 @@ header {
     width: 0;
 }
 
+.nav-menu.hovering a:hover::after {
+    width: 100%;
+}
+
 .hamburger {
     display: none;
 }
