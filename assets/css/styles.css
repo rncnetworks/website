@@ -113,7 +113,7 @@ header {
 .hero {
     max-width: 90%;
     margin: 0 auto;
-    background-image: url('../img/conceitual.jpg');
+    background-image: url('../img/conceitual.webp');
     background-size: cover;
     background-position: center;
     padding: 100px 20px 20px 20px; 
