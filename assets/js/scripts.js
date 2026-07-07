@@ -83,6 +83,66 @@ window.addEventListener('resize', () => {
   });
 });
 
+/* SPA — página em construção */
+(function() {
+  var constr = document.getElementById('page-construcao');
+  var main = document.querySelector('main');
+  var hero = document.querySelector('.hero-br');
+  if (!constr || !main || !hero) return;
+
+  function showConstr() {
+    hero.style.display = 'none';
+    main.style.display = 'none';
+    constr.style.display = 'flex';
+    window.scrollTo(0, 0);
+    if (window.innerWidth <= 768) {
+      document.body.style.scrollSnapType = 'none';
+    }
+    history.pushState({ page: 'construcao' }, '', '#construcao');
+  }
+
+  function showMain() {
+    hero.style.display = '';
+    main.style.display = '';
+    constr.style.display = 'none';
+    if (window.innerWidth <= 768) {
+      document.body.style.scrollSnapType = '';
+    }
+    history.pushState({ page: 'main' }, '', window.location.pathname);
+  }
+
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('a[href="#page-construcao"]');
+    if (link) {
+      e.preventDefault();
+      showConstr();
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    var voltar = e.target.closest('[data-voltar]');
+    if (voltar) {
+      e.preventDefault();
+      showMain();
+    }
+  });
+
+  window.addEventListener('popstate', function(e) {
+    if (e.state && e.state.page === 'construcao') {
+      hero.style.display = 'none';
+      main.style.display = 'none';
+      constr.style.display = 'flex';
+    } else {
+      hero.style.display = '';
+      main.style.display = '';
+      constr.style.display = 'none';
+      if (window.innerWidth <= 768) {
+        document.body.style.scrollSnapType = '';
+      }
+    }
+  });
+})();
+
 /* Active nav link via card visibility (desktop only) */
 (function() {
   const nav = document.querySelector('.nav-menu');

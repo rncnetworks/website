@@ -19,6 +19,7 @@
 
 html {
     scroll-behavior: smooth;
+    background-color: #495057;
 }
 
 body {
@@ -424,22 +425,17 @@ footer {
     color: var(--text-color);
 }
 
-/* Página em construção */
-.pag-construcao {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-.pag-construcao .em-construcao {
-    flex: 1;
+/* Página em construção (SPA) */
+.page-construcao {
     background-color: #495057;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 0 4px;
 }
 
-.em-construcao-inner {
-    flex: 1;
+.construcao-inner {
     width: 100%;
     max-width: 90%;
     margin: 0 auto;
@@ -449,16 +445,16 @@ footer {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 40px 30px;
+    padding: 120px 30px;
 }
 
-.em-construcao-inner h1 {
+.construcao-inner h1 {
     font-size: 2.5rem;
     color: var(--primary-color);
     margin-bottom: 15px;
 }
 
-.em-construcao-inner p {
+.construcao-inner p {
     font-size: 1.1rem;
     color: var(--secondary-color);
     margin-bottom: 30px;
@@ -470,13 +466,28 @@ footer {
     body {
         scroll-snap-type: y mandatory;
         scroll-padding-top: 160px;
+        overflow-x: hidden;
     }
 
     .hero {
         height: auto;
-        padding-top: 140px;
+        padding: 120px 0 20px;
         scroll-snap-align: start;
         max-width: 100%;
+        border-radius: 0;
+    }
+
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero-text p {
+        font-size: 1rem;
+    }
+
+    .hero-overlay {
+        padding: 20px;
+        margin: 0 10px;
     }
 
     .card,
@@ -498,6 +509,7 @@ footer {
         inset: 0;
         width: 100%;
         height: 100%;
+        max-width: 100%;
         flex: none;
         opacity: 0;
         transition: opacity 0.5s;
@@ -510,10 +522,15 @@ footer {
     .card-content {
         text-align: center;
         align-items: center;
+        padding: 20px;
     }
 
     .card h3 {
         font-size: 1.5rem;
+    }
+
+    .card p {
+        font-size: 1rem;
     }
 
     .nav-container {
@@ -522,6 +539,7 @@ footer {
         justify-content: space-between;
         align-items: center;
         max-width: 100%;
+        padding: 10px;
         gap: 0;
     }
 
@@ -576,13 +594,40 @@ footer {
 
     .footer-inner {
         max-width: 100%;
+        padding: 30px 16px;
+        flex-direction: column;
+        gap: 20px;
     }
 
-    .em-construcao-inner {
-        max-width: 100%;
+    .footer-cnpj {
+        display: block;
+    }
+
+    .footer-right {
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    .contato-grid {
+        flex-direction: column;
+        gap: 30px;
     }
 
     .contato-left {
         display: none;
+    }
+
+    .contato-right {
+        align-items: center;
+        text-align: center;
+    }
+
+    .construcao-inner {
+        max-width: 100%;
+        padding: 40px 16px;
+    }
+
+    .construcao-inner h1 {
+        font-size: 1.8rem;
     }
 }
