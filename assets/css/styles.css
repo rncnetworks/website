@@ -23,7 +23,7 @@ html {
 }
 
 body {
-    background-color: var(--bg-color);
+    background-color: #495057;
     color: var(--text-color);
     line-height: 1.6;
 }
@@ -178,6 +178,12 @@ header {
 }
 
 /* Fundo dos cards */
+main {
+    background-color: #495057;
+    padding-bottom: 0;
+    display: flow-root;
+}
+
 .cards-br {
     background-color: #495057;
     padding: 4px 0;
@@ -261,7 +267,7 @@ header {
     flex-direction: row-reverse;
 }
 
-.card:last-of-type {
+.card:not(.card-contato):last-of-type {
     margin-bottom: 0;
 }
 
@@ -425,40 +431,49 @@ footer {
     color: var(--text-color);
 }
 
-/* Página em construção (SPA) */
-.page-construcao {
+/* Página Saiba Mais */
+.page-saiba-mais {
     background-color: #495057;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     padding: 80px 0 4px;
 }
 
-.construcao-inner {
-    width: 100%;
+.saiba-mais-inner {
     max-width: 90%;
     margin: 0 auto;
     background: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 120px 30px;
+    padding: 60px 20px;
 }
 
-.construcao-inner h1 {
+.saiba-mais-inner h1 {
     font-size: 2.5rem;
     color: var(--primary-color);
-    margin-bottom: 15px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.construcao-inner p {
+.saiba-mais-inner .descricao {
     font-size: 1.1rem;
     color: var(--secondary-color);
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.saiba-mais-inner h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    text-align: center;
     margin-bottom: 30px;
-    max-width: 500px;
+}
+
+.saiba-mais-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+}
+
+.saiba-mais-card {
+    min-height: 400px;
+    background: #495057;
 }
 
 /* Responsividade */
@@ -622,12 +637,20 @@ footer {
         text-align: center;
     }
 
-    .construcao-inner {
+    .saiba-mais-inner {
         max-width: 100%;
         padding: 40px 16px;
     }
 
-    .construcao-inner h1 {
+    .saiba-mais-inner h1 {
         font-size: 1.8rem;
+    }
+
+    .saiba-mais-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .saiba-mais-card {
+        min-height: 200px;
     }
 }

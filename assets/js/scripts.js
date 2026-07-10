@@ -83,79 +83,123 @@ window.addEventListener('resize', () => {
   });
 });
 
-/* SPA — página em construção */
+/* SPA — páginas internas */
 (function() {
-  var constr = document.getElementById('page-construcao');
+  var saibaMaisPages = document.querySelectorAll('.page-saiba-mais');
   var main = document.querySelector('main');
   var hero = document.querySelector('.hero-br');
-  if (!constr || !main || !hero) return;
+  var cardsBr = document.querySelector('.cards-br');
+  if (!main || !hero) return;
 
-  function showConstr() {
-    hero.style.display = 'none';
-    main.style.display = 'none';
-    constr.style.display = 'flex';
-    window.scrollTo(0, 0);
-    if (window.innerWidth <= 768) {
-      document.body.style.scrollSnapType = 'none';
+  function anySaibaMaisVisible() {
+    for (var i = 0; i < saibaMaisPages.length; i++) {
+      if (saibaMaisPages[i].style.display !== 'none') return true;
     }
-    history.pushState({ page: 'construcao' }, '', '#construcao');
+    return false;
+  }
+
+  function hideAll() {
+    saibaMaisPages.forEach(function(p) { p.style.display = 'none'; });
   }
 
   function showMain() {
     hero.style.display = '';
+    if (cardsBr) cardsBr.style.display = '';
     main.style.display = '';
-    constr.style.display = 'none';
-    if (window.innerWidth <= 768) {
-      document.body.style.scrollSnapType = '';
-    }
+    hideAll();
+    window.scrollTo(0, 0);
+    if (window.innerWidth <= 768) document.body.style.scrollSnapType = '';
+    if (window.__navObserver) window.__navObserver.start();
     history.pushState({ page: 'main' }, '', window.location.pathname);
   }
 
+  function showSaibaMais(pageId) {
+    var section = document.getElementById(pageId);
+    if (!section) return;
+    hero.style.display = 'none';
+    if (cardsBr) cardsBr.style.display = 'none';
+    main.style.display = '';
+    hideAll();
+    section.style.display = '';
+    if (window.__navObserver) window.__navObserver.stop();
+    document.querySelectorAll('.nav-menu a').forEach(function(a) { a.classList.remove('active'); });
+    window.scrollTo(0, 0);
+    if (window.innerWidth <= 768) document.body.style.scrollSnapType = 'none';
+    history.pushState({ page: pageId }, '', '#' + pageId);
+  }
+
   document.addEventListener('click', function(e) {
-    var link = e.target.closest('a[href="#page-construcao"]');
-    if (link) {
+    var logo = e.target.closest('.logo-area a');
+    if (logo) {
       e.preventDefault();
-      showConstr();
+      if (anySaibaMaisVisible()) { showMain(); }
+      else { window.scrollTo(0, 0); }
+      return;
     }
   });
 
   document.addEventListener('click', function(e) {
-    var voltar = e.target.closest('[data-voltar]');
-    if (voltar) {
+    var link = e.target.closest('a[href^="#page-saiba-mais-"]');
+    if (link) {
       e.preventDefault();
-      showMain();
+      var pageId = link.getAttribute('href').replace('#', '');
+      showSaibaMais(pageId);
     }
+  });
+
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('a[href="#page-main"]');
+    if (link) { e.preventDefault(); showMain(); }
+  });
+
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('.nav-menu a');
+    if (!link) return;
+    if (!anySaibaMaisVisible()) return;
+    e.preventDefault();
+    var name = link.getAttribute('href').replace('#', '');
+    if (!name || name === 'contato') {
+      var el = document.getElementById('contato');
+      if (el) window.scrollTo(0, el.offsetTop - 70);
+      return;
+    }
+    showSaibaMais('page-saiba-mais-' + name);
   });
 
   window.addEventListener('popstate', function(e) {
-    if (e.state && e.state.page === 'construcao') {
+    if (e.state && e.state.page && e.state.page.indexOf('page-saiba-mais-') === 0) {
       hero.style.display = 'none';
-      main.style.display = 'none';
-      constr.style.display = 'flex';
+      if (cardsBr) cardsBr.style.display = 'none';
+      main.style.display = '';
+      hideAll();
+      var sec = document.getElementById(e.state.page);
+      if (sec) sec.style.display = '';
+      if (window.__navObserver) window.__navObserver.stop();
+      document.querySelectorAll('.nav-menu a').forEach(function(a) { a.classList.remove('active'); });
     } else {
       hero.style.display = '';
+      if (cardsBr) cardsBr.style.display = '';
       main.style.display = '';
-      constr.style.display = 'none';
-      if (window.innerWidth <= 768) {
-        document.body.style.scrollSnapType = '';
-      }
+      hideAll();
+      if (window.innerWidth <= 768) document.body.style.scrollSnapType = '';
+      if (window.__navObserver) window.__navObserver.start();
     }
   });
 })();
 
 /* Active nav link via card visibility (desktop only) */
-(function() {
-  const nav = document.querySelector('.nav-menu');
+window.__navObserver = (function() {
+  var nav = document.querySelector('.nav-menu');
   if (!nav) return;
-  const links = nav.querySelectorAll('a');
-  const cards = document.querySelectorAll('.card');
-  let observer = null;
-  const visibility = new Map();
-  cards.forEach(c => visibility.set(c, 0));
+  var links = nav.querySelectorAll('a');
+  var cards = document.querySelectorAll('.card');
+  var observer = null;
+  var visibility = new Map();
+  cards.forEach(function(c) { visibility.set(c, 0); });
 
   function getActiveCardId() {
-    let best = null, bestRatio = 0;
-    visibility.forEach((ratio, card) => {
+    var best = null, bestRatio = 0;
+    visibility.forEach(function(ratio, card) {
       if (ratio > bestRatio) { bestRatio = ratio; best = card; }
     });
     return best ? best.id : null;
@@ -164,26 +208,32 @@ window.addEventListener('resize', () => {
   function updateActiveLink() {
     if (window.innerWidth <= 768) return;
     if (nav.classList.contains('hovering')) return;
-    const activeId = getActiveCardId();
-    links.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + activeId));
+    var activeId = getActiveCardId();
+    links.forEach(function(link) { link.classList.toggle('active', link.getAttribute('href') === '#' + activeId); });
   }
 
   function setupObserver() {
     if (observer) observer.disconnect();
-    visibility.forEach((_, card) => visibility.set(card, 0));
+    visibility.forEach(function(_, card) { visibility.set(card, 0); });
     if (window.innerWidth > 768) {
-      observer = new IntersectionObserver(entries => {
-        entries.forEach(e => visibility.set(e.target, e.intersectionRatio));
+      observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { visibility.set(e.target, e.intersectionRatio); });
         if (!nav.classList.contains('hovering')) updateActiveLink();
       }, { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] });
-      cards.forEach(c => observer.observe(c));
+      cards.forEach(function(c) { observer.observe(c); });
     } else {
-      links.forEach(l => l.classList.remove('active'));
+      links.forEach(function(l) { l.classList.remove('active'); });
     }
   }
 
-  nav.addEventListener('mouseenter', () => { if (window.innerWidth > 768) nav.classList.add('hovering'); });
-  nav.addEventListener('mouseleave', () => { nav.classList.remove('hovering'); updateActiveLink(); });
+  function stopObserver() {
+    if (observer) { observer.disconnect(); observer = null; }
+  }
+
+  nav.addEventListener('mouseenter', function() { if (window.innerWidth > 768) nav.classList.add('hovering'); });
+  nav.addEventListener('mouseleave', function() { nav.classList.remove('hovering'); updateActiveLink(); });
   window.addEventListener('resize', setupObserver);
   setupObserver();
+
+  return { start: setupObserver, stop: stopObserver };
 })();
