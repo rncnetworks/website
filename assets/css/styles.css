@@ -226,6 +226,7 @@ main {
     flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     padding: 30px;
     text-align: left;
     background: #ffffff;
@@ -233,7 +234,6 @@ main {
 
 .card-content .btn-cta {
     align-self: center;
-    margin-top: auto;
 }
 
 .card h3 {
@@ -245,7 +245,8 @@ main {
 
 .card p {
     color: var(--secondary-color);
-    font-size: 1.1rem; 
+    font-size: 1.1rem;
+    text-align: justify;
 }
 
 /* Card Contato - layout vertical como antes */
