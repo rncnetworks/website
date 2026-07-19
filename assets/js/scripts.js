@@ -107,6 +107,8 @@ window.addEventListener('resize', () => {
     if (cardsBr) cardsBr.style.display = '';
     main.style.display = '';
     hideAll();
+    var areaSelect = document.getElementById('area');
+    if (areaSelect) areaSelect.value = '';
     window.scrollTo(0, 0);
     if (window.innerWidth <= 768) document.body.style.scrollSnapType = '';
     if (window.__navObserver) window.__navObserver.start();
@@ -121,6 +123,8 @@ window.addEventListener('resize', () => {
     main.style.display = '';
     hideAll();
     section.style.display = '';
+    var areaSelect = document.getElementById('area');
+    if (areaSelect) areaSelect.value = pageId.replace('page-', '');
     if (window.__navObserver) window.__navObserver.stop();
     document.querySelectorAll('.nav-menu a').forEach(function(a) { a.classList.remove('active'); });
     window.scrollTo(0, 0);
@@ -139,7 +143,7 @@ window.addEventListener('resize', () => {
   });
 
   document.addEventListener('click', function(e) {
-    var link = e.target.closest('a[href^="#page-saiba-mais-"]');
+    var link = e.target.closest('a[href^="#page-"]');
     if (link) {
       e.preventDefault();
       var pageId = link.getAttribute('href').replace('#', '');
@@ -163,11 +167,11 @@ window.addEventListener('resize', () => {
       if (el) window.scrollTo(0, el.offsetTop - 70);
       return;
     }
-    showSaibaMais('page-saiba-mais-' + name);
+    showSaibaMais('page-' + name);
   });
 
   window.addEventListener('popstate', function(e) {
-    if (e.state && e.state.page && e.state.page.indexOf('page-saiba-mais-') === 0) {
+    if (e.state && e.state.page && e.state.page.indexOf('page-') === 0) {
       hero.style.display = 'none';
       if (cardsBr) cardsBr.style.display = 'none';
       main.style.display = '';
@@ -207,7 +211,6 @@ window.__navObserver = (function() {
 
   function updateActiveLink() {
     if (window.innerWidth <= 768) return;
-    if (nav.classList.contains('hovering')) return;
     var activeId = getActiveCardId();
     links.forEach(function(link) { link.classList.toggle('active', link.getAttribute('href') === '#' + activeId); });
   }
@@ -218,7 +221,7 @@ window.__navObserver = (function() {
     if (window.innerWidth > 768) {
       observer = new IntersectionObserver(function(entries) {
         entries.forEach(function(e) { visibility.set(e.target, e.intersectionRatio); });
-        if (!nav.classList.contains('hovering')) updateActiveLink();
+        updateActiveLink();
       }, { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] });
       cards.forEach(function(c) { observer.observe(c); });
     } else {
@@ -230,8 +233,6 @@ window.__navObserver = (function() {
     if (observer) { observer.disconnect(); observer = null; }
   }
 
-  nav.addEventListener('mouseenter', function() { if (window.innerWidth > 768) nav.classList.add('hovering'); });
-  nav.addEventListener('mouseleave', function() { nav.classList.remove('hovering'); updateActiveLink(); });
   window.addEventListener('resize', setupObserver);
   setupObserver();
 

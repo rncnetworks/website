@@ -94,12 +94,8 @@ header {
     width: 100%;
 }
 
-.nav-menu.hovering a.active::after {
+.nav-menu:hover a.active::after {
     width: 0;
-}
-
-.nav-menu.hovering a:hover::after {
-    width: 100%;
 }
 
 .hamburger {
@@ -465,15 +461,53 @@ footer {
     margin-bottom: 30px;
 }
 
-.saiba-mais-cards {
+.cards-servicos {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
 }
 
-.saiba-mais-card {
-    min-height: 400px;
-    background: #495057;
+.card-servicos {
+    background: #ffffff;
+    border-left: 4px solid var(--primary-color);
+    border-radius: 0 8px 8px 0;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 130px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-servicos > div {
+    flex: 1;
+}
+
+.card-servicos .card-icon {
+    width: 140px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.card-servicos:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.card-servicos strong {
+    color: var(--primary-color);
+    font-size: 1.05rem;
+}
+
+.card-servicos p {
+    color: var(--secondary-color);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
 }
 
 /* Responsividade */
@@ -646,11 +680,11 @@ footer {
         font-size: 1.8rem;
     }
 
-    .saiba-mais-cards {
+    .cards-servicos {
         grid-template-columns: 1fr;
     }
 
-    .saiba-mais-card {
+    .card-servicos {
         min-height: 200px;
     }
 }
