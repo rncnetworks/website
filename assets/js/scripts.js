@@ -137,7 +137,7 @@ window.addEventListener('resize', () => {
     if (logo) {
       e.preventDefault();
       if (anySaibaMaisVisible()) { showMain(); }
-      else { window.scrollTo(0, 0); }
+      else { window.scrollTo(0, 0); history.replaceState(null, '', window.location.pathname); }
       return;
     }
   });
