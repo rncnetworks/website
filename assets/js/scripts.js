@@ -83,6 +83,19 @@ window.addEventListener('resize', () => {
   });
 });
 
+document.getElementById('nome').addEventListener('input', function(e) {
+    var value = e.target.value.replace(/[^a-zA-ZÀ-ú\s]/g, '').substring(0, 25);
+    e.target.value = value;
+});
+
+document.getElementById('telefone').addEventListener('input', function(e) {
+    var value = e.target.value.replace(/\D/g, '').substring(0, 11);
+    var formatted = value;
+    if (value.length > 2) formatted = '(' + value.substring(0,2) + ') ' + value.substring(2);
+    if (value.length > 7) formatted = '(' + value.substring(0,2) + ') ' + value.substring(2,7) + '-' + value.substring(7);
+    e.target.value = formatted;
+});
+
 /* SPA — páginas internas */
 (function() {
   var saibaMaisPages = document.querySelectorAll('.page-saiba-mais');
@@ -238,3 +251,39 @@ window.__navObserver = (function() {
 
   return { start: setupObserver, stop: stopObserver };
 })();
+
+const form = document.getElementById('form');
+const submitBtn = form.querySelector('button[type="submit"]');
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    formData.append("access_key", "193607f7-b00d-4736-92fd-2b8eecd17e42");
+
+    const originalText = submitBtn.textContent;
+
+    submitBtn.textContent = "Sending...";
+    submitBtn.disabled = true;
+
+    try {
+        const response = await fetch("https://api.web3forms.com/submit", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("Success! Your message has been sent.");
+            form.reset();
+        } else {
+            alert("Error: " + data.message);
+        }
+    } catch (error) {
+        alert("Something went wrong. Please try again.");
+    } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
+});
